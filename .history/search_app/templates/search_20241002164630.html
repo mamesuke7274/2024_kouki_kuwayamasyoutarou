@@ -1,0 +1,11 @@
+<form method="get"> 
+    {{ form.as_p }}  <!-- フォームを表示 --> 
+    <button type="submit">検索</button> 
+</form> 
+<ul> 
+{% for product in results %} 
+    <li>{{ product.name }} - {{ product.price }}</li> 
+{% empty %} 
+    <li>No results found</li> 
+{% endfor %} 
+</ul>
