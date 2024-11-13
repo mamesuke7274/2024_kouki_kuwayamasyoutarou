@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>商品一覧</title>
+    <style>
+        /* タブのスタイル */
+        .tab {
+            display: inline-block;
+            padding: 10px;
+            border: 1px solid #ccc;
+            margin-right: 5px;
+            cursor: pointer;
+            position: relative;
+        }
+        .tab-content {
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 2px;
+            right: 5px;
+            cursor: pointer;
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>商品一覧</h1>
+    <ul>
+        {% for product in products %}
+            <li><a href="#" onclick="openTab({{ product.id }}); return false;">{{ product.name }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <div id="tabs-container"></div>
+
+    <script>
+        // タブのデータを管理するオブジェクト
+        const tabs = {};
+
+        // タブを開く関数
+        function openTab(productId) {
+            // すでに開かれている場合はアクティブにするだけ
+            if (tabs[productId]) {
+                document.querySelector(`#tab-${productId}`).classList.add('active');
+                return;
+            }
+
+            // Ajaxで商品詳細を取得
+            fetch(`/product/${productId}/detail-api/`)
+                .then(response => response.json())
+                .then(data => {
+                    // 新しいタブのHTMLを作成
+                    const tab = document.createElement('div');
+                    tab.classList.add('tab');
+                    tab.id = `tab-${data.id}`;
+                    tab.innerHTML = `
+                        ${data.name} <span class="close-btn" onclick="closeTab(${data.id});">&times;</span>
+                    `;
+
+                    // タブのコンテンツも追加
+                    const content = document.createElement('div');
+                    content.classList.add('tab-content');
+                    content.id = `content-${data.id}`;
+                    content.innerHTML = `
+                        <h2>${data.name}</h2>
+                        <p>${data.description}</p>
+                        <p>価格: ¥${data.price}</p>
+                        <p>カテゴリ: ${data.category}</p>
+                    `;
+
+                    // DOMに追加
+                    document.getElementById('tabs-container').appendChild(tab);
+                    document.getElementById('tabs-container').appendChild(content);
+
+                    // タブのデータを保存
+                    tabs[productId] = { tab, content };
+                });
+        }
+
+        // タブを閉じる関数
+        function closeTab(productId) {
+            const tabData = tabs[productId];
+            if (tabData) {
+                tabData.tab.remove();
+                tabData.content.remove();
+                delete tabs[productId];
+            }
+        }
+    </script>
+</body>
+
+</html>
