@@ -1,0 +1,26 @@
+<!-- wishlist.html -->
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ほしい物リスト</title>
+</head>
+
+<body>
+    <h1>ほしい物リスト</h1>
+    <ul>
+        {% for item in wishlist_items %}
+        <li>
+            <strong>{{ item.product.name }}</strong><br>
+            {{ item.product.description }}<br>
+            価格: ¥{{ item.product.price }}<br>
+            <a href="{% url 'remove_from_wishlist' item.product.id %}">削除</a>
+        </li>
+        {% empty %}
+        <li>ほしい物リストにアイテムはありません。</li>
+        {% endfor %}
+    </ul>
+</body>
+
+</html>

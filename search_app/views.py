@@ -92,3 +92,31 @@ def search_view(request):
     page_obj = paginator.get_page(page_number) 
 
     return render(request, 'search.html', {'form': form, 'page_obj': page_obj, 'results': results})
+
+# ほしい物リスト（仮）
+from django.shortcuts import render, redirect
+from django.contrib.auth.decorators import login_required
+from .models import Product, Wishlist
+
+@login_required
+def add_to_wishlist(request, product_id):
+    product = Product.objects.get(id=product_id)
+    wishlist_item, created = Wishlist.objects.get_or_create(user=request.user, product=product)
+    if created:
+        # アイテムがリストに追加された
+        return redirect('wishlist')  # ほしい物リストページにリダイレクト
+    else:
+        # すでにリストにある場合は何もしない
+        return redirect('wishlist')
+
+@login_required
+def remove_from_wishlist(request, product_id):
+    product = Product.objects.get(id=product_id)
+    wishlist_item = Wishlist.objects.get(user=request.user, product=product)
+    wishlist_item.delete()  # リストから削除
+    return redirect('wishlist')  # ほしい物リストページにリダイレクト
+
+@login_required
+def wishlist(request):
+    wishlist_items = Wishlist.objects.filter(user=request.user)
+    return render(request, 'wishlist.html', {'wishlist_items': wishlist_items})
