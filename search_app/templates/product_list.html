@@ -3,34 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
-
     <title>商品一覧</title>
     <style>
-        /* タブのスタイル */
-        .tab {
-            display: inline-block;
-            padding: 10px;
-            border: 1px solid #ccc;
-            margin-right: 5px;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .tab-content {
-            margin-top: 20px;
-            border: 1px solid #ccc;
-            padding: 10px;
-        }
-
-        .close-btn {
-            position: absolute;
-            top: 2px;
-            right: 5px;
-            cursor: pointer;
-            color: red;
-            font-weight: bold;
-        }
-
         /* ベースのリセット */
         * {
             margin: 0;
@@ -43,6 +17,7 @@
             font-family: Arial, sans-serif;
             background-color: #f7f7f7;
             color: #333;
+            padding: 20px;
         }
 
         /* リストのスタイル */
@@ -72,9 +47,60 @@
             color: #1d6fa5;
         }
 
-        /* タブ切り替えがクリックされるリンクのデザイン */
-        a:active {
-            color: #105080;
+        /* タブのスタイル */
+        .tabs-container {
+            display: flex;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 5px;
+            margin-top: 20px;
+        }
+
+        .tab {
+            padding: 10px 15px;
+            margin-right: 5px;
+            cursor: pointer;
+            color: #333;
+            border-radius: 5px 5px 0 0;
+            border: 1px solid #ddd;
+            border-bottom: none;
+            background-color: #f1f1f1;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
+        }
+
+        .tab.active {
+            background-color: #fff;
+            color: #333;
+            border-bottom: 2px solid #3498db;
+        }
+
+        /* タブのコンテンツ */
+        .tab-content {
+            display: none;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-top: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* 閉じるボタン */
+        .close-btn {
+            position: absolute;
+            top: 5px;
+            right: 8px;
+            cursor: pointer;
+            color: #e74c3c;
+            font-weight: bold;
+            font-size: 16px;
+            transition: color 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #c0392b;
         }
     </style>
 </head>
@@ -87,33 +113,28 @@
         {% endfor %}
     </ul>
 
-    <div id="tabs-container"></div>
+    <div class="tabs-container" id="tabs-container"></div>
 
     <script>
-        // タブのデータを管理するオブジェクト
         const tabs = {};
 
-        // タブを開く関数
         function openTab(productId) {
-            // すでに開かれている場合はアクティブにするだけ
             if (tabs[productId]) {
-                document.querySelector(`#tab-${productId}`).classList.add('active');
+                activateTab(productId);
                 return;
             }
 
-            // Ajaxで商品詳細を取得
             fetch(`/product/${productId}/detail-api/`)
                 .then(response => response.json())
                 .then(data => {
-                    // 新しいタブのHTMLを作成
                     const tab = document.createElement('div');
                     tab.classList.add('tab');
                     tab.id = `tab-${data.id}`;
                     tab.innerHTML = `
                         ${data.name} <span class="close-btn" onclick="closeTab(${data.id});">&times;</span>
                     `;
+                    tab.onclick = () => activateTab(data.id);
 
-                    // タブのコンテンツも追加
                     const content = document.createElement('div');
                     content.classList.add('tab-content');
                     content.id = `content-${data.id}`;
@@ -124,16 +145,23 @@
                         <p>カテゴリ: ${data.category}</p>
                     `;
 
-                    // DOMに追加
                     document.getElementById('tabs-container').appendChild(tab);
-                    document.getElementById('tabs-container').appendChild(content);
+                    document.body.appendChild(content);
 
-                    // タブのデータを保存
                     tabs[productId] = { tab, content };
+                    activateTab(productId);
                 });
         }
 
-        // タブを閉じる関数
+        function activateTab(productId) {
+            Object.values(tabs).forEach(({ tab, content }) => {
+                tab.classList.remove('active');
+                content.classList.remove('active');
+            });
+            tabs[productId].tab.classList.add('active');
+            tabs[productId].content.classList.add('active');
+        }
+
         function closeTab(productId) {
             const tabData = tabs[productId];
             if (tabData) {
