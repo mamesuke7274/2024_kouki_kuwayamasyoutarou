@@ -33,6 +33,7 @@
 
         li {
             margin-bottom: 8px;
+            position: relative;
         }
 
         /* リンクのスタイル */
@@ -45,6 +46,23 @@
 
         a:hover {
             color: #1d6fa5;
+        }
+
+        /* プレビューボックス */
+        .preview-box {
+            display: none;
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 250px;
+            padding: 10px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            max-height: 300px;
+            overflow-y: auto;
         }
 
         /* タブのスタイル */
@@ -109,11 +127,18 @@
     <h1>商品一覧</h1>
     <ul>
         {% for product in products %}
-        <li><a href="#" onclick="openTab('{{ product.id }}'); return false;">{{ product.name }}</a></li>
+        <li>
+            <a href="#" onclick="openTab('{{ product.id }}'); return false;"
+                onmouseenter="showPreview(event, '{{ product.id }}')" onmouseleave="hidePreview()">
+                {{ product.name }}
+            </a>
+        </li>
         {% endfor %}
     </ul>
 
     <div class="tabs-container" id="tabs-container"></div>
+
+    <div class="preview-box" id="preview-box"></div>
 
     <script>
         const tabs = {};
@@ -165,10 +190,39 @@
         function closeTab(productId) {
             const tabData = tabs[productId];
             if (tabData) {
+                const allTabs = Array.from(document.querySelectorAll('.tab'));
+                const currentIndex = allTabs.indexOf(tabData.tab);
+                const nextIndex = (currentIndex === allTabs.length - 1) ? currentIndex - 1 : currentIndex + 1;
+
                 tabData.tab.remove();
                 tabData.content.remove();
                 delete tabs[productId];
+
+                if (allTabs.length > 1 && nextIndex >= 0) {
+                    const nextTabId = allTabs[nextIndex].id.replace('tab-', '');
+                    activateTab(nextTabId);
+                }
             }
+        }
+
+        function showPreview(event, productId) {
+            const previewBox = document.getElementById('preview-box');
+            fetch(`/product/${productId}/detail-api/`)
+                .then(response => response.json())
+                .then(data => {
+                    previewBox.innerHTML = `
+                        <p><strong>${data.name}</strong></p>
+                        <p>${data.description}</p>
+                        <p>価格: ¥${data.price}</p>
+                        <p>カテゴリ: ${data.category}</p>
+                    `;
+                    previewBox.style.display = 'block';
+                });
+        }
+
+        function hidePreview() {
+            const previewBox = document.getElementById('preview-box');
+            previewBox.style.display = 'none';
         }
     </script>
 </body>
