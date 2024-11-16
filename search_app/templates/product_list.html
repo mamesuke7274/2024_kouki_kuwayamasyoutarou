@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="ja">
 
@@ -128,6 +129,14 @@
     <ul>
         {% for product in products %}
         <li>
+            {% if product.thumbnail %}
+            <img src="{{ product.thumbnail.url }}" alt="{{ product.name }}"
+                style="max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 8px;">
+            {% else %}
+            <img src="{% static 'search_app/images/notimage_oYwFYVI.png' %}" alt="デフォルト画像"
+                style="max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 8px;">
+            {% endif %}
+
             <a href="#" onclick="openTab('{{ product.id }}'); return false;"
                 onmouseenter="showPreview(event, '{{ product.id }}')" onmouseleave="hidePreview()">
                 {{ product.name }}
@@ -136,6 +145,7 @@
                 {% csrf_token %}
                 <button type="submit">ほしい物リストに追加</button>
             </form>
+
         </li>
         {% endfor %}
     </ul>

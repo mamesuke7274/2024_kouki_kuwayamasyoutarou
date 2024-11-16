@@ -1,5 +1,10 @@
 from django.urls import path 
 from . import views 
+
+# 画像追加のためのインポート
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [ 
     path('', views.search_view, name='search'), 
     path('search/', views.search_view, name='search_view'), 
@@ -14,4 +19,7 @@ urlpatterns = [
     path('remove_from_wishlist/<int:product_id>/', views.remove_from_wishlist, name='remove_from_wishlist'),
     path('wishlist/', views.wishlist, name='wishlist'),
 ]
+
+# urlの結びつけ
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
