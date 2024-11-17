@@ -48,10 +48,24 @@ def product_delete(request, pk):
         return redirect('product_list') 
     return render(request, 'product_confirm_delete.html', {'product': product}) 
 
-def product_list(request): 
-    products = Product.objects.all() 
-    print(products)
-    return render(request, 'product_list.html', {'products': products}) 
+from django.db.models import Avg
+
+def product_list(request):
+    products = Product.objects.all()
+
+    for product in products:
+        # 商品に関連するレビューを取得
+        reviews = Review.objects.filter(product=product)
+        
+        # 評価があれば平均を計算、なければ0を設定
+        average_rating = reviews.aggregate(Avg('rating'))['rating__avg'] or 0
+        
+        # 平均評価をもとに満たされた星と空の星を計算
+        product.full_stars = list(range(1, int(average_rating) + 1))
+        product.empty_stars = list(range(int(average_rating) + 1, 6))
+    
+    return render(request, 'product_list.html', {'products': products})
+
 
 def search_view(request): 
     form = SearchForm(request.GET or None) 
@@ -162,17 +176,17 @@ def product_reviews_api(request, pk):
     return JsonResponse(reviews_data, safe=False)
 
 @login_required
-def add_review(request, pk):
-    product = get_object_or_404(Product, pk=pk)
+def add_review(request, product_id):
+    product = get_object_or_404(Product, id=product_id)  # Productを取得
     if request.method == "POST":
         form = ReviewForm(request.POST)
         if form.is_valid():
             review = form.save(commit=False)
-            review.product = product
-            review.user = request.user
+            review.product = product  # Productを設定
+            review.user = request.user  # 現在のユーザーを設定
             review.save()
             return redirect(reverse('product_list'))
     else:
         form = ReviewForm()
 
-    return render(request, 'add_review.html', {'form': form, 'product': product})
+    return render(request, 'add_review.html', {'product': product, 'range': range(1, 6)})
