@@ -120,3 +120,59 @@ def remove_from_wishlist(request, product_id):
 def wishlist(request):
     wishlist_items = Wishlist.objects.filter(user=request.user)
     return render(request, 'wishlist.html', {'wishlist_items': wishlist_items})
+
+
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import Product  # モデルをインポート
+from .models import Review  # レビュー用モデルもインポート
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import get_object_or_404, redirect
+from django.urls import reverse
+from .models import Product, Review
+from .forms import ReviewForm
+from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
+from .models import Product, Review
+
+def product_detail_api(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    data = {
+        "id": product.id,
+        "name": product.name,
+        "description": product.description,
+        "price": product.price,
+        "category": product.category.name,
+        "is_authenticated": request.user.is_authenticated,  # ここを追加
+    }
+    return JsonResponse(data)
+
+def product_reviews_api(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    reviews = product.reviews.all()
+    reviews_data = [
+        {
+            "user": review.user.username,
+            "rating": review.rating,
+            "comment": review.comment,
+            "created_at": review.created_at.strftime("%Y-%m-%d %H:%M"),
+        }
+        for review in reviews
+    ]
+    return JsonResponse(reviews_data, safe=False)
+
+@login_required
+def add_review(request, pk):
+    product = get_object_or_404(Product, pk=pk)
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.product = product
+            review.user = request.user
+            review.save()
+            return redirect(reverse('product_list'))
+    else:
+        form = ReviewForm()
+
+    return render(request, 'add_review.html', {'form': form, 'product': product})

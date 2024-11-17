@@ -14,6 +14,74 @@
 </head>
 
 <body>
+
+    <h1>{{ product.name }}</h1>
+    <p>{{ product.description }}</p>
+    <p>価格: ¥{{ product.price }}</p>
+
+    <!-- 商品評価 -->
+    <div>
+        <h3>評価 (平均: {{ average_rating }} / 5)</h3>
+        <form id="rating-form" method="post">
+            {% csrf_token %}
+            <label for="rating">評価を選択:</label>
+            <select name="rating" id="rating">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <button type="submit">評価する</button>
+        </form>
+    </div>
+
+    <!-- 商品コメント -->
+    <div>
+        <h3>コメント</h3>
+        <ul>
+            {% for comment in comments %}
+            <li>
+                <strong>{{ comment.user.username }}</strong>:
+                <p>{{ comment.content }}</p>
+            </li>
+            {% endfor %}
+        </ul>
+
+        <!-- コメント投稿フォーム -->
+        <h4>コメントを書く</h4>
+        <form method="post">
+            {% csrf_token %}
+            <textarea name="content" rows="4" required></textarea><br>
+            <button type="submit">コメントを投稿する</button>
+        </form>
+    </div>
+
+    <script>
+        // 評価フォームの送信をAJAXで処理
+        document.getElementById('rating-form').onsubmit = function (e) {
+            e.preventDefault();
+
+            const ratingValue = document.getElementById('rating').value;
+
+            fetch("{% url 'add_rating' product.id %}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: JSON.stringify({ rating: ratingValue })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('評価が完了しました');
+                        location.reload();  // ページを再読み込みして評価を更新
+                    }
+                });
+        };
+    </script>
+
     <div class="container mt-5">
         <div class="row justify-content-center">
             <div class="col-md-8">

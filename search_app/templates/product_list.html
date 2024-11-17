@@ -1,248 +1,3 @@
-<!-- {% load static %}
-<!DOCTYPE html>
-<html lang="ja">
-
-<head>
-    <meta charset="UTF-8">
-    <title>商品一覧</title>
-    <style>
-        /* ベースのリセット */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* 全体の背景とテキストの調整 */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            color: #333;
-            padding: 20px;
-        }
-
-        /* リストのスタイル */
-        ul {
-            list-style: none;
-            padding: 10px;
-            background-color: #fff;
-            border-radius: 5px;
-            max-width: 400px;
-            margin: 20px auto;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        li {
-            margin-bottom: 8px;
-            position: relative;
-        }
-
-        /* リンクのスタイル */
-        a {
-            text-decoration: none;
-            color: #3498db;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        a:hover {
-            color: #1d6fa5;
-        }
-
-        /* プレビューボックス */
-        .preview-box {
-            display: none;
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 250px;
-            padding: 10px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        /* タブのスタイル */
-        .tabs-container {
-            display: flex;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 5px;
-            margin-top: 20px;
-        }
-
-        .tab {
-            padding: 10px 15px;
-            margin-right: 5px;
-            cursor: pointer;
-            color: #333;
-            border-radius: 5px 5px 0 0;
-            border: 1px solid #ddd;
-            border-bottom: none;
-            background-color: #f1f1f1;
-            transition: background-color 0.3s, color 0.3s;
-            position: relative;
-        }
-
-        .tab.active {
-            background-color: #fff;
-            color: #333;
-            border-bottom: 2px solid #3498db;
-        }
-
-        /* タブのコンテンツ */
-        .tab-content {
-            display: none;
-            padding: 10px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-top: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* 閉じるボタン */
-        .close-btn {
-            position: absolute;
-            top: 5px;
-            right: 8px;
-            cursor: pointer;
-            color: #e74c3c;
-            font-weight: bold;
-            font-size: 16px;
-            transition: color 0.3s;
-        }
-
-        .close-btn:hover {
-            color: #c0392b;
-        }
-    </style>
-</head>
-
-<body>
-    <h1>商品一覧</h1>
-    <ul>
-        {% for product in products %}
-        <li>
-            {% if product.thumbnail %}
-            <img src="{{ product.thumbnail.url }}" alt="{{ product.name }}"
-                style="max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 8px;">
-            {% else %}
-            <img src="{% static 'search_app/images/notimage_oYwFYVI.png' %}" alt="デフォルト画像"
-                style="max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 8px;">
-            {% endif %}
-
-            <a href="#" onclick="openTab('{{ product.id }}'); return false;"
-                onmouseenter="showPreview(event, '{{ product.id }}')" onmouseleave="hidePreview()">
-                {{ product.name }}
-            </a>
-            <form action="{% url 'add_to_wishlist' product.id %}" method="POST">
-                {% csrf_token %}
-                <button type="submit">ほしい物リストに追加</button>
-            </form>
-
-        </li>
-        {% endfor %}
-    </ul>
-
-    <div class="tabs-container" id="tabs-container"></div>
-
-    <div class="preview-box" id="preview-box"></div>
-
-    <script>
-        const tabs = {};
-
-        function openTab(productId) {
-            if (tabs[productId]) {
-                activateTab(productId);
-                return;
-            }
-
-            fetch(`/product/${productId}/detail-api/`)
-                .then(response => response.json())
-                .then(data => {
-                    const tab = document.createElement('div');
-                    tab.classList.add('tab');
-                    tab.id = `tab-${data.id}`;
-                    tab.innerHTML = `
-                        ${data.name} <span class="close-btn" onclick="closeTab(${data.id});">&times;</span>
-                    `;
-                    tab.onclick = () => activateTab(data.id);
-
-                    const content = document.createElement('div');
-                    content.classList.add('tab-content');
-                    content.id = `content-${data.id}`;
-                    content.innerHTML = `
-                        <h2>${data.name}</h2>
-                        <p>${data.description}</p>
-                        <p>価格: ¥${data.price}</p>
-                        <p>カテゴリ: ${data.category}</p>
-                    `;
-
-                    document.getElementById('tabs-container').appendChild(tab);
-                    document.body.appendChild(content);
-
-                    tabs[productId] = { tab, content };
-                    activateTab(productId);
-                });
-        }
-
-        function activateTab(productId) {
-            Object.values(tabs).forEach(({ tab, content }) => {
-                tab.classList.remove('active');
-                content.classList.remove('active');
-            });
-            tabs[productId].tab.classList.add('active');
-            tabs[productId].content.classList.add('active');
-        }
-
-        function closeTab(productId) {
-            const tabData = tabs[productId];
-            if (tabData) {
-                const allTabs = Array.from(document.querySelectorAll('.tab'));
-                const currentIndex = allTabs.indexOf(tabData.tab);
-                const nextIndex = (currentIndex === allTabs.length - 1) ? currentIndex - 1 : currentIndex + 1;
-
-                tabData.tab.remove();
-                tabData.content.remove();
-                delete tabs[productId];
-
-                if (allTabs.length > 1 && nextIndex >= 0) {
-                    const nextTabId = allTabs[nextIndex].id.replace('tab-', '');
-                    activateTab(nextTabId);
-                }
-            }
-        }
-
-        function showPreview(event, productId) {
-            const previewBox = document.getElementById('preview-box');
-            fetch(`/product/${productId}/detail-api/`)
-                .then(response => response.json())
-                .then(data => {
-                    previewBox.innerHTML = `
-                        <p><strong>${data.name}</strong></p>
-                        <p>${data.description}</p>
-                        <p>価格: ¥${data.price}</p>
-                        <p>カテゴリ: ${data.category}</p>
-                    `;
-                    previewBox.style.display = 'block';
-                });
-        }
-
-        function hidePreview() {
-            const previewBox = document.getElementById('preview-box');
-            previewBox.style.display = 'none';
-        }
-    </script>
-</body>
-
-</html> -->
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="ja">
@@ -481,22 +236,61 @@
                     tab.classList.add('tab');
                     tab.id = `tab-${data.id}`;
                     tab.innerHTML = `
-                        ${data.name} <span class="close-btn" onclick="closeTab(${data.id});">&times;</span>
-                    `;
+                ${data.name} <span class="close-btn" onclick="closeTab(${data.id});">&times;</span>
+            `;
                     tab.onclick = () => activateTab(data.id);
 
                     const content = document.createElement('div');
                     content.classList.add('tab-content');
                     content.id = `content-${data.id}`;
-                    content.innerHTML = `
-                        <h2>${data.name}</h2>
-                        <p>${data.description}</p>
-                        <p>価格: ¥${data.price}</p>
-                        <p>カテゴリ: ${data.category}</p>
-                    `;
 
+                    // メインの商品情報
+                    content.innerHTML = `
+                <h2>${data.name}</h2>
+                <p>${data.description}</p>
+                <p>価格: ¥${data.price}</p>
+                <p>カテゴリ: ${data.category}</p>
+            `;
+
+                    // レビュー一覧セクション
+                    const reviewContainer = document.createElement('div');
+                    reviewContainer.id = `reviews-${data.id}`;
+                    reviewContainer.innerHTML = `
+                <h2>レビュー一覧</h2>
+                <ul id="review-list-${data.id}">
+                    <p>読み込み中...</p>
+                </ul>
+                ${data.is_authenticated ? `
+                <a href="/product/${data.id}/add-review/">レビューを書く</a>
+                ` : `
+                <p><a href="accounts/login">ログイン</a>してレビューを書いてください。</p>
+                `}
+            `;
+
+                    content.appendChild(reviewContainer);
                     document.getElementById('tabs-container').appendChild(tab);
                     document.body.appendChild(content);
+
+                    // レビューのデータ取得
+                    fetch(`/product/${productId}/reviews-api/`)
+                        .then(response => response.json())
+                        .then(reviews => {
+                            const reviewList = document.getElementById(`review-list-${data.id}`);
+                            reviewList.innerHTML = ""; // 初期表示の "読み込み中..." を消す
+                            if (reviews.length > 0) {
+                                reviews.forEach(review => {
+                                    reviewList.innerHTML += `
+                                <li>
+                                    <strong>${review.user}</strong>（${review.rating}/5）<br>
+                                    <p>${review.comment}</p>
+                                    <small>${review.created_at}</small>
+                                </li>
+                            `;
+                                });
+                            } else {
+                                reviewList.innerHTML = "<p>まだレビューがありません。</p>";
+                            }
+                        });
 
                     tabs[productId] = { tab, content };
                     activateTab(productId);
