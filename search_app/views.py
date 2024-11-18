@@ -51,8 +51,10 @@ def product_delete(request, pk):
 from django.db.models import Avg
 
 def product_list(request):
+    # 商品を全件取得
     products = Product.objects.all()
 
+    # 商品ごとに評価を計算
     for product in products:
         # 商品に関連するレビューを取得
         reviews = Review.objects.filter(product=product)
@@ -63,8 +65,22 @@ def product_list(request):
         # 平均評価をもとに満たされた星と空の星を計算
         product.full_stars = list(range(1, int(average_rating) + 1))
         product.empty_stars = list(range(int(average_rating) + 1, 6))
-    
-    return render(request, 'product_list.html', {'products': products})
+        
+        # 平均評価をプロパティとして商品に保存
+        product.average_rating = average_rating
+
+    # 評価が高い順に商品を並べ替え
+    recommended_products = sorted(products, key=lambda p: p.average_rating, reverse=True)
+
+    # おすすめ商品トップ5を取得
+    recommended_products = recommended_products[:5]
+
+    # 商品一覧をテンプレートに渡す
+    return render(request, 'product_list.html', {
+        'products': products,  # 全商品
+        'recommended_products': recommended_products  # おすすめ商品
+    })
+
 
 
 def search_view(request): 

@@ -187,11 +187,44 @@
         .close-btn:hover {
             color: #c0392b;
         }
+
+        .osusume {
+            margin: 40px;
+        }
     </style>
 </head>
 
 <body>
     <h1>商品一覧</h1>
+    <h2>おすすめ商品</h2>
+    <ul class="osusume">
+        {% for product in recommended_products %}
+        <li>
+            {% if product.thumbnail %}
+            <img src="{{ product.thumbnail.url }}" alt="{{ product.name }}"
+                style="width: 170px;max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 8px;">
+            {% else %}
+            <img src="{% static 'search_app/images/notimage_oYwFYVI.png' %}" alt="デフォルト画像"
+                style="width: 170px;max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 8px;">
+            {% endif %}
+            <a href="#" onclick="openTab('{{ product.id }}'); return false;"
+                onmouseenter="showPreview(event, '{{ product.id }}')" onmouseleave="hidePreview()">
+                {{ product.name }}
+            </a>
+            <p>評価: {{ product.average_rating }}</p>
+            <!-- 星の表示をする場合 -->
+            <div>
+                {% for i in product.full_stars %}
+                ★
+                {% endfor %}
+                {% for i in product.empty_stars %}
+                ☆
+                {% endfor %}
+            </div>
+        </li>
+        {% endfor %}
+    </ul>
+    <h2>商品一覧</h2>
     <ul>
         {% for product in products %}
         <li>
