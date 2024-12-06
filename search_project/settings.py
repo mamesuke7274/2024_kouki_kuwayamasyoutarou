@@ -41,7 +41,13 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'search_app',
-    'accounts'
+    'accounts',
+
+    'django.contrib.sites',  
+    'allauth',  
+    'allauth.account',  
+    'allauth.socialaccount', 
+    'allauth.socialaccount.providers.google',  # Google認証用
 ]
 
 MIDDLEWARE = [
@@ -52,6 +58,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
+]
+
+SITE_ID = 1
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 ROOT_URLCONF = 'search_project.urls'
@@ -150,3 +164,16 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 LOGIN_REDIRECT_URL = '/'  # ログイン後のリダイレクト先
 LOGOUT_REDIRECT_URL = '/'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'EMAIL_AUTHENTICATION': True,
+        "SCOPE": [
+            "email",  
+            "profile" 
+        ],
+        "AUTH_PARAMS": {
+            "access_type": "online",
+        },
+    }
+}

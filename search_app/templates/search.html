@@ -146,10 +146,10 @@
         <!-- 以下アカウント機能 -->
         {% if user.is_authenticated %}
         <p>こんにちは、{{ user.username }}さん</p>
-        <a href="{% url 'logout' %}">ログアウト</a>
+        <a href="{% url 'account_logout' %}">ログアウト</a>
         {% else %}
-        <a href="{% url 'login' %}">ログイン</a>
-        <a href="{% url 'signup' %}">サインアップ</a>
+        <a href="{% url 'account_login' %}">ログイン</a>
+        <a href="{% url 'account_signup' %}">サインアップ</a>
         {% endif %}
         {% if messages %}
         {% for message in messages %}
