@@ -3,6 +3,8 @@
 <html lang="ja">
 
 <head>
+    <script src="{% static 'controller/gamepad.js' %}"></script>
+
     <meta charset="UTF-8">
     <title>商品一覧</title>
     <style>
@@ -196,6 +198,13 @@
 
 <body>
     <h1>商品一覧</h1>
+    <nav>
+        <ul>
+            <li class="nav"><a href="{% url 'search_view' %}">トップページ</a></li>
+            <li class="nav"><a href="{% url 'product_create' %}">作成</a></li>
+            <li class="nav"><a href="{% url 'product_list' %}">一覧</a></li>
+        </ul>
+    </nav>
     <h2>おすすめ商品</h2>
     <ul class="osusume">
         {% for product in recommended_products %}
@@ -307,7 +316,7 @@
                 ${data.is_authenticated ? `
                 <a href="/product/${data.id}/add-review/">レビューを書く</a>
                 ` : `
-                <p><a href="accounts/login">ログイン</a>してレビューを書いてください。</p>
+                <p><a href="{% url 'account_login' %}">ログイン</a>してレビューを書いてください。</p>
                 `}
             `;
 

@@ -6,6 +6,6 @@ urlpatterns = [
     path('', include('search_app.urls')),
 
     path('accounts/', include('allauth.urls')),  # allauthのURL設定を追加
-
+    path('controller/', include('controller.urls')),
     # path('accounts/', include('accounts.urls')),  # accountsアプリのURLをインクルード
 ]

@@ -48,6 +48,8 @@ INSTALLED_APPS = [
     'allauth.account',  
     'allauth.socialaccount', 
     'allauth.socialaccount.providers.google',  # Google認証用
+
+    'controller',
 ]
 
 MIDDLEWARE = [
