@@ -16,217 +16,43 @@
             font-size: 24px;
             color: #333;
         }
+
+        #test {
+            overflow: auto;
+            max-width: 100px;
+            max-height: 100px;
+            margin: auto;
+            border: #333;
+
+        }
     </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <head>
-        <!-- Google tag (gtag.js) -->
-        google seo 対策
-        <!-- /Google tag (gtag.js) -->
-
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-        <!-- Google Tag Manager -->
-        google seo 対策
-        <!-- End Google Tag Manager -->
-
-        <!-- favicon -->
-        <!-- /favicon -->
-
-        <!---タイトル--->
-        <title>私のホームページ</title>
-        <meta name="description"
-            content="自営業　Redstarホームページ ITコンサルタント PC納品、サーバー納品、施設内ITインフラ整備・設定PC納品windowsアプリ（アプリケーション開発・継続的な保守）、 ホームページ制作（HTML.css.java等コーディング）、WEBプラットフォーム（予約管理システム）等、VPN、PC修理・データ復旧、等　ゲーミングPC・業務用PC・サーバーPC　納品致します">
-        <!---/タイトル--->
-
-        <!-- X twitter meta -->
-        <meta name="description" content="　">
-        <meta property="og:site_name" content="ホームページ">
-        <meta property="og:title" content="ホームページ top">
-        <meta property="og:type" content="article">
-        <meta property="og:url" content="ホームページurl添付">
-        <meta property="og:image" content="url共有時の表示画像url添付/image/~~~~~~.jpg">
-        <meta property="og:description" content="~~~~オフィシャルサイト　ホームページ">
-        <!--/ X twitter meta -->
-
-        <!---css--->
-        <!---/css--->
-
+        <script src="{% static 'controller/gamepad.js' %}"></script>
     </head>
 
 <body>
     <h1>PS4コントローラーのボタンチェック</h1>
     <p id="button-display">コントローラーを接続してください</p>
-    <script src="{% static 'controller/gamepad.js' %}"></script>
-    <!-- Google Tag Manager (noscript) -->
-    google tag
-    <!-- End Google Tag Manager (noscript) -->
+    <main>
+        <p>以下のボタンが押せるか確認してください</p>
+        <script>
+            function deleteMessage() {
+                confirm("入力を受け付けました");
+            }
+        </script>
+        <p><button onclick="deleteMessage()">テストボタン</button></p>
+        <p id="test">
+            テストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキスト
+            テストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキスト
+            テストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキスト
+            テストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキストテストテキスト
+        </p>
 
-    <body>
-        <!-- Google Tag Manager (noscript) -->
-        google tag
-        <!-- End Google Tag Manager (noscript) -->
-        <!-- ▼全体の囲み▼ -->
-        <div id="wrapper">
-            <!-- ▼ヘッダ▼ -->
-            <header>
-                <div class="header_img">
-                    <img src="img/header.jpg" alt="ヘッダー題名">
-                    <div class="header_logo">
-                        <img src="img/logo.svg" alt="ヘッダーlogo題名">
-                    </div>
-                    <!-- ▼メニュー▼ -->
-                    <div id="open">ホームページ内メニュー</div>
-                    <div id="menu">
-                        <nav>
-                            <ul>
-                                <li><a href="index.html">Top</a>
-                                <li><a
-                                        href="https://www.youtube.com/watch?v=M4RYcKMHNwA&list=RDPLUvX8Kx_hw&index=2">私のプロフィール</a>
-                                </li>
-                                <li><span>リストメニュー</span>
-                                    <ul class="sub-menu">
-                                        <li><a href="#">リスト内メニュー</a>
-                                        <li><a href="#">リスト内メニュー</a>
-                                    </ul>
-                                <li><span>リストメニュー</span>
-                                    <ul class="sub-menu">
-                                        <li><a href="#">リスト内メニュー</a>
-                                        <li><a href="#">リスト内メニュー</a>
-                                        <li><a href="#">リスト内メニュー</a>
-                                        <li><a href="#">リスト内メニュー</a>
-                                        <li><a href="#" target="_blank">リスト内メニュー</a>
-                                        <li><a href="#" target="_blank">リスト内メニュー</a>
-                                        <li><a href="#">リスト内メニュー</a>
-                                    </ul>
-                                <li><a href="#">リストメニュー</a>
-                                <li><a href="#">リストメニュー</a>
-                            </ul>
-                        </nav>
-                    </div>
-                    <!-- ▲メニュー▲ -->
-            </header>
-            <!-- ▲ヘッダ▲ -->
-            <!-- ▼メイン▼ -->
-            <main>
-                <div id="contents">
+    </main>
 
-                    <!--Xツイートボタン-->
-                    <button><a
-                            href="HPurl添付 &text=オフィシャルサイト　仮設ホームページ　皆見に来てね &via=X:user ID &related=＠X user ID &hashtags=#X user neme>"
-                            target="_blank">ホームページurlシェアXボタン</a></button>
-                    <!--/Xツイートボタン-->
-
-                    <h3>はじめに</h3>
-
-                    <div class="line">
-                        <h3>
-                            当サイトは========の臨時ホームページです。<br>
-                            <br>
-                            サイト内の文章　又は　^^^^^^^の二次利用はご遠慮願います。<br>
-                            <br>
-                            htmlソースコードはフリーです。<br>
-                            <br>
-                            みたいなことを書いたり書かなかったり。<br>
-                        </h3>
-                    </div>
-                    <h2><a href="profile.html">私についてのプロフィール</a></h2>
-                    サイト内ページ：<a href="profile.html">プロフィール</a><br>
-
-                    <div class="dcline">
-                        <ul>
-                            <li><a href="X url" target="_blank">私のX(twitter)</a></li>
-                            <li>私のdiscord server　<button><a href="" target="_blank">welcome</a></button></a>
-                            <li><a href="#" target="_blank">私のyoutube</a>(開設中)</li>
-                    </div>
-                    <h2><a href="#">私の書きたい内容</a></h2>
-                    サイト内ページ：<a href="#">私の書きたい内容</a><br>
-                    <div class="dcline">
-                        私の書きたい内容 link:<a href="url" target="_blank">私の書きたい内容のlink</a><br>
-                    </div>
-
-                    <div class="textbox">
-                        <a href="#" target="_blank">###</a>
-                        <a href="#" target="_blank"><img src="#" title="#" alt="#"></a><br>
-                    </div>
-                    <h2>title</h2>
-                    <div class="dcline">
-                        <li>title<br>
-                            外部リンク：<a href="#" target="_blank">title</a></li>
-                        <img src="#" 　alt="#" title="#">
-                    </div>
-
-                    <h2><a href="#">title</a></h2>
-                    サイト内ページ：<a href="#">title</a>
-                    <div class="dcline">
-                        youtube link：<a href="#" target="_blank">sample</a><br>
-                        ：<a href="#" target="_blank">sample</a>
-                    </div>
-
-                    <div class="textbox">
-                        <dl>
-                            <dt>sample</dt>
-                            <dd>sample</dd>
-                            <dt>sample</dt>
-                            <dd>sample</dd>
-                            <dt>sample</dt>
-                            <dd>sample</dd>
-                        </dl>
-                    </div>
-
-                    <h2><a href="link_X.html">title</a></h2>
-                    サイト内ページ：<a href="#">sample</a>
-                    <div class="textbox">
-                        <div class="X-timeline">
-                        </div>
-                    </div>
-
-                    <h3>その他リンクサイト<h3>
-                            <div class="dcline">
-                                <li><a href="link_all.html">全てのリンク(工事中)</a>
-                                <li><a href="#" target="_blank">google drive(工事中)</a>
-                                <li><a href="#" target="_blank">amazon(欲しいものリスト)</a>
-                                <li><a href="link_etc.html">その他(工事中)</a>
-                            </div>
-                            <h3>更新履歴</h3>
-                            <dl>
-                                <dt>2024.04.19</dt>
-                                <dd>サイト更新</dd>
-                                <dt>2024.04.14</dt>
-                                <dd>サイト開設</dd>
-                            </dl>
-                </div>
-            </main>
-            <!-- ▲メイン▲ -->
-            <!-- ▼フッタ▼ -->
-            <footer>
-                <div class="fab_icon">
-                    <ul>
-                        <li><a href="#"><i class="fab fa-instagram"></i></a></li>
-                        <li><a href="https://twitter.com/mimimi_kawaii"><i class="fab fa-twitter"></i></a></li>
-                        <li><a href="#"><i class="fab fa-line"></i></a></li>
-                        <li><a href="#"><i class="fab fa-youtube"></i></a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-inner">
-                    Copyright (c) <a href="index.html">サンプルHP</a> @since2024 All Rights Reserved.
-                    <div id="fl">webデザイン<a href="https://redstar-hp.netlify.app/" target="_blank">Redstar_kakino</a>
-                    </div>
-
-                </div>
-            </footer>
-            <!-- ▲フッタ▲ -->
-        </div>
-        <!-- ▲全体の囲み▲ -->
-
-        <!-- ページトップに戻る -->
-        <a href="#" id="pagetop">▲top</a>
-
-        <!-- jquery -->
-
-    </body>
+</body>
 
 </html>

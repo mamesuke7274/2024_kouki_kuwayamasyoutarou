@@ -1,0 +1,334 @@
+@charset "utf-8";
+
+/* ベースのリセット  */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* 全体の背景とテキストの調整  */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f7f7f7;
+    color: #333;
+    padding: 20px;
+}
+
+/* 商品一覧コンテナをスクロール可能に  */
+ul {
+    display: flex;
+    /* 横並び対応（スクロール用）  */
+    flex-wrap: wrap;
+    /* 幅が足りない場合に折り返し  */
+    gap: 20px;
+    /* アイテム間のスペース  */
+    list-style: none;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-height: 80vh;
+    /* コンテナの高さを画面の80%に固定  */
+    overflow-x: auto;
+    /* 垂直方向のスクロールを有効化  */
+    margin: 0 auto;
+    /* 中央揃え  */
+}
+
+/* 各アイテムのスタイル  */
+li {
+    flex: 1 1 calc(33.333% - 20px);
+    /* 3列のレイアウトに調整  */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    transition: transform 0.3s ease;
+}
+
+li:hover {
+    transform: scale(1.05);
+    /* ホバー時に拡大  */
+}
+
+/* スクロールバーのカスタマイズ（オプション）  */
+ul::-webkit-scrollbar {
+    width: 8px;
+}
+
+ul::-webkit-scrollbar-thumb {
+    background-color: #3498db;
+    border-radius: 4px;
+}
+
+ul::-webkit-scrollbar-track {
+    background-color: #f1f1f1;
+}
+
+
+画像スタイル img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 8px;
+}
+
+ボタンのスタイル button {
+    margin-top: 10px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    background-color: #3498db;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #1d6fa5;
+}
+
+
+/* リンクのスタイル  */
+a {
+    text-decoration: none;
+    color: #3498db;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: #1d6fa5;
+}
+
+.osusume {
+    margin: 40px;
+}
+
+
+/* プレビューボックス */
+.preview-box {
+    display: none;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    width: 250px;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+    max-height: 300px;
+}
+
+/* タブのスタイル */
+.tabs-container {
+    display: flex;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 5px;
+    margin-top: 20px;
+}
+
+.tab {
+    padding: 10px 15px;
+    margin-right: 5px;
+    cursor: pointer;
+    color: #333;
+    border-radius: 5px 5px 0 0;
+    border: 1px solid #ddd;
+    border-bottom: none;
+    background-color: #f1f1f1;
+    transition: background-color 0.3s, color 0.3s;
+    position: relative;
+}
+
+.tab.active {
+    background-color: #fff;
+    color: #333;
+    border-bottom: 2px solid #3498db;
+}
+
+/* タブのコンテンツ */
+.tab-content {
+    display: none;
+    padding: 10px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+/* 閉じるボタン */
+.close-btn {
+    position: absolute;
+    top: 5px;
+    right: 8px;
+    cursor: pointer;
+    color: #e74c3c;
+    font-weight: bold;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.close-btn:hover {
+    color: #c0392b;
+}
+
+
+
+
+
+/* Navbar & Navmenu color */
+:root {
+    --background-navbar: rgba(55, 55, 55, 0.98);
+}
+
+.header {
+    background: var(--background-navbar);
+    position: fixed;
+    width: 100%;
+    height: 52px;
+}
+
+/* Nav items */
+.menu {
+    list-style: none;
+    position: absolute;
+    width: 100%;
+    height: auto;
+    top: 0;
+    margin-top: 52px;
+    padding: 0 0 10px 0;
+    clear: both;
+    background: var(--background-navbar);
+    transition: 0.3192s cubic-bezier(0.04, 0.04, 0.12, 0.96) 0.1008s;
+    transform: scale(1, 0);
+    transform-origin: top;
+}
+
+/* Hamburger menu button */
+.menu-btn:checked~.menu {
+    transform: scale(1, 1);
+    transform-origin: top;
+    transition: 0.3192s cubic-bezier(0.04, 0.04, 0.12, 0.96) 0.1008s;
+}
+
+/* Hamburger menbu text */
+.menu a {
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: 2px;
+    font-size: 16px;
+    text-transform: capitalize;
+    color: #ddd;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+.menu li {
+    border-top: 1px solid rgb(75, 75, 75);
+    padding: 15px 0;
+    margin: 0 54px;
+    opacity: 0;
+    transition: 0.5s;
+}
+
+.menu-btn:checked~.menu a,
+.menu-btn:checked~.menu li {
+    opacity: 1;
+    transition: 0.3192s cubic-bezier(0.04, 0.04, 0.12, 0.96) 0.2s;
+}
+
+.menu-btn {
+    display: none;
+}
+
+.menu-icon {
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    padding: 24px 14px;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+
+.navicon {
+    background: #ddd;
+    display: block;
+    height: 3px;
+    width: 26px;
+    position: relative;
+    transition: 0.3192s cubic-bezier(0.04, 0.04, 0.12, 0.96) 0.1008s;
+}
+
+.navicon:before,
+.navicon:after {
+    content: "";
+    display: block;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background: #ddd;
+    transition: 0.3192s cubic-bezier(0.04, 0.04, 0.12, 0.96) 0.1008s;
+}
+
+.navicon:before {
+    top: 9px;
+}
+
+.navicon:after {
+    bottom: 9px;
+}
+
+/* Hamburger Menu Animation Start */
+.menu-btn:checked~.menu-icon .navicon:before {
+    transform: rotate(-45deg);
+}
+
+.menu-btn:checked~.menu-icon .navicon:after {
+    transform: rotate(45deg);
+}
+
+.menu-btn:checked~.menu-icon:not(.steps) .navicon:before {
+    top: 0;
+}
+
+.menu-btn:checked~.menu-icon:not(.steps) .navicon:after {
+    bottom: 0;
+}
+
+.menu-btn:checked~.menu-icon .navicon {
+    background: rgba(0, 0, 0, 0);
+    transition: 0.2192s cubic-bezier(0.04, 0.04, 0.12, 0.96) 0.1008s;
+}
+
+/* Hamburger Menu Animation End */
+
+/* Navbar Container */
+.navtext-container {
+    width: 100%;
+    height: 52px;
+    position: absolute;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Navbar Text */
+.navtext {
+    position: absolute;
+    text-transform: uppercase;
+    color: #ddd;
+    letter-spacing: 4px;
+    font-size: 20px;
+}

@@ -3,312 +3,202 @@
 <html lang="ja">
 
 <head>
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
     <script src="{% static 'controller/gamepad.js' %}"></script>
 
     <meta charset="UTF-8">
     <title>商品一覧</title>
-    <style>
-        /* ベースのリセット */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
 
-        /* 全体の背景とテキストの調整 */
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            color: #333;
-            padding: 20px;
-        }
-
-        /* 商品一覧コンテナをスクロール可能に */
-        ul {
-            display: flex;
-            /* 横並び対応（スクロール用） */
-            flex-wrap: wrap;
-            /* 幅が足りない場合に折り返し */
-            gap: 20px;
-            /* アイテム間のスペース */
-            list-style: none;
-            padding: 10px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            max-height: 80vh;
-            /* コンテナの高さを画面の80%に固定 */
-            overflow-y: auto;
-            /* 垂直方向のスクロールを有効化 */
-            margin: 0 auto;
-            /* 中央揃え */
-        }
-
-        /* 各アイテムのスタイル */
-        li {
-            flex: 1 1 calc(33.333% - 20px);
-            /* 3列のレイアウトに調整 */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            position: relative;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            background-color: #f9f9f9;
-            transition: transform 0.3s ease;
-        }
-
-        li:hover {
-            transform: scale(1.05);
-            /* ホバー時に拡大 */
-        }
-
-        /* スクロールバーのカスタマイズ（オプション） */
-        ul::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ul::-webkit-scrollbar-thumb {
-            background-color: #3498db;
-            border-radius: 4px;
-        }
-
-        ul::-webkit-scrollbar-track {
-            background-color: #f1f1f1;
-        }
-
-
-        /* 画像スタイル */
-        img {
-            max-width: 100%;
-            height: auto;
-            border-radius: 5px;
-            margin-bottom: 8px;
-        }
-
-        /* ボタンのスタイル */
-        button {
-            margin-top: 10px;
-            padding: 8px 12px;
-            border: none;
-            border-radius: 5px;
-            background-color: #3498db;
-            color: #fff;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        button:hover {
-            background-color: #1d6fa5;
-        }
-
-
-        /* リンクのスタイル */
-        a {
-            text-decoration: none;
-            color: #3498db;
-            font-weight: bold;
-            transition: color 0.3s ease;
-        }
-
-        a:hover {
-            color: #1d6fa5;
-        }
-
-        /* プレビューボックス */
-        .preview-box {
-            display: none;
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            width: 250px;
-            padding: 10px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-
-        /* タブのスタイル */
-        .tabs-container {
-            display: flex;
-            border-bottom: 2px solid #ddd;
-            padding-bottom: 5px;
-            margin-top: 20px;
-        }
-
-        .tab {
-            padding: 10px 15px;
-            margin-right: 5px;
-            cursor: pointer;
-            color: #333;
-            border-radius: 5px 5px 0 0;
-            border: 1px solid #ddd;
-            border-bottom: none;
-            background-color: #f1f1f1;
-            transition: background-color 0.3s, color 0.3s;
-            position: relative;
-        }
-
-        .tab.active {
-            background-color: #fff;
-            color: #333;
-            border-bottom: 2px solid #3498db;
-        }
-
-        /* タブのコンテンツ */
-        .tab-content {
-            display: none;
-            padding: 10px;
-            background-color: #fff;
-            border: 1px solid #ddd;
-            border-top: none;
-        }
-
-        .tab-content.active {
-            display: block;
-        }
-
-        /* 閉じるボタン */
-        .close-btn {
-            position: absolute;
-            top: 5px;
-            right: 8px;
-            cursor: pointer;
-            color: #e74c3c;
-            font-weight: bold;
-            font-size: 16px;
-            transition: color 0.3s;
-        }
-
-        .close-btn:hover {
-            color: #c0392b;
-        }
-
-        .osusume {
-            margin: 40px;
-        }
-    </style>
 </head>
 
 <body>
-    <h1>商品一覧</h1>
-    <nav>
-        <ul>
-            <li class="nav"><a href="{% url 'search_view' %}">トップページ</a></li>
-            <li class="nav"><a href="{% url 'product_create' %}">作成</a></li>
-            <li class="nav"><a href="{% url 'product_list' %}">一覧</a></li>
+    <header>
+
+        <input type="checkbox" class="menu-btn" id="menu-btn">
+        <label for="menu-btn" class="menu-icon"><span class="navicon"></span></label>
+        <ul class="menu">
+            <li class="top"><a href="{% url 'product_create' %}">作成</a></li>
+            <li><a href="{% url 'product_list' %}">一覧</a></li>
+            {% if user.is_authenticated %}
+            <li>
+                <p>こんにちは、{{ user.username }}さん</p>
+            </li>
+
+            <li><a href="{% url 'account_logout' %}">ログアウト</a></li>
+            {% else %}
+            <li><a href="{% url 'account_login' %}">ログイン</a></li>
+            <li><a href="{% url 'account_signup' %}">サインアップ</a></li>
+            {% endif %}
+            {% if messages %}
+            {% endif %}
+
         </ul>
-    </nav>
-    <h2>おすすめ商品</h2>
-    <ul class="osusume">
-        {% for product in recommended_products %}
-        <li>
-            {% if product.thumbnail %}
-            <img src="{{ product.thumbnail.url }}" alt="{{ product.name }}"
-                style="width: 170px;max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 8px;">
-            {% else %}
-            <img src="{% static 'search_app/images/notimage_oYwFYVI.png' %}" alt="デフォルト画像"
-                style="width: 170px;max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 8px;">
-            {% endif %}
-            <a href="#" onclick="openTab('{{ product.id }}'); return false;"
-                onmouseenter="showPreview(event, '{{ product.id }}')" onmouseleave="hidePreview()">
-                {{ product.name }}
-            </a>
-            <p>評価: {{ product.average_rating }}</p>
-            <!-- 星の表示をする場合 -->
-            <div>
-                {% for i in product.full_stars %}
-                ★
-                {% endfor %}
-                {% for i in product.empty_stars %}
-                ☆
-                {% endfor %}
-            </div>
-        </li>
-        {% endfor %}
-    </ul>
-    <h2>商品一覧</h2>
-    <ul>
-        {% for product in products %}
-        <li>
-            {% if product.thumbnail %}
-            <img src="{{ product.thumbnail.url }}" alt="{{ product.name }}"
-                style="max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 8px;">
-            {% else %}
-            <img src="{% static 'search_app/images/notimage_oYwFYVI.png' %}" alt="デフォルト画像"
-                style="max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 8px;">
-            {% endif %}
-
-            <a href="#" onclick="openTab('{{ product.id }}'); return false;"
-                onmouseenter="showPreview(event, '{{ product.id }}')" onmouseleave="hidePreview()">
-                {{ product.name }}
-            </a>
-
-            <!-- 評価の表示 -->
-            <div>
-                {% for i in product.full_stars %}
-                <span>&#9733;</span> <!-- ★ -->
-                {% endfor %}
-                {% for i in product.empty_stars %}
-                <span>&#9734;</span> <!-- ☆ -->
-                {% endfor %}
-            </div>
-
-            <form action="{% url 'add_to_wishlist' product.id %}" method="POST">
-                {% csrf_token %}
-                <button type="submit">ほしい物リストに追加</button>
-            </form>
-        </li>
-        {% endfor %}
-    </ul>
 
 
-    <div class="tabs-container" id="tabs-container"></div>
+    </header>
+    <main>
+        <h1>商品一覧</h1>
 
-    <div class="preview-box" id="preview-box"></div>
+        <form method="get">
+            {{ form.as_p }}
+            <label for="category">カテゴリ:</label>
+            <select name="category">
+                <option value="">すべて</option>
+                <option value="books">本</option>
+                <option value="electronics">電子機器</option>
+            </select>
+            <label for="min_price">最低価格:</label>
+            <input type="number" name="min_price" min="0">
+            <label for="max_price">最高価格:</label>
+            <input type="number" name="max_price" min="0">
+            <!-- 並び替えの選択 -->
+            <label for="sort">並び替え:</label>
+            <select name="sort">
+                <option value="name">名前順</option>
+                <option value="price_asc">価格が安い順</option>
+                <option value="price_desc">価格が高い順</option>
+            </select>
+            <button type="submit">検索</button>
+        </form>
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                <a href="?page=1">最初</a>
+                <a href="?page={{ page_obj.previous_page_number }}">前へ</a>
+                {% endif %}
+                <span>ページ {{ page_obj.number }} /
+                    {{ page_obj.paginator.num_pages }}</span>
+                {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">次へ</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}">最後</a>
+                {% endif %}
+            </span>
+        </div>
+        <h2>商品一覧</h2>
+        <ul>
+            {% for product in page_obj %}
+            <li>
+                {% if product.thumbnail %}
+                <img src="{{ product.thumbnail.url }}" alt="{{ product.name }}"
+                    style="max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 8px;">
+                {% else %}
+                <img src="{% static 'search_app/images/notimage_oYwFYVI.png' %}" alt="デフォルト画像"
+                    style="max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 8px;">
+                {% endif %}
 
-    <script>
-        const tabs = {};
+                <a href="#" onclick="openTab('{{ product.id }}'); return false;"
+                    onmouseenter="showPreview(event, '{{ product.id }}')" onmouseleave="hidePreview()">
+                    {{ product.name }}
+                </a>
 
-        function openTab(productId) {
-            if (tabs[productId]) {
-                activateTab(productId);
-                return;
-            }
+                <!-- 評価の表示 -->
+                <div>
+                    {% for i in product.full_stars %}
+                    <span>&#9733;</span> <!-- ★ -->
+                    {% endfor %}
+                    {% for i in product.empty_stars %}
+                    <span>&#9734;</span> <!-- ☆ -->
+                    {% endfor %}
+                </div>
 
-            fetch(`/product/${productId}/detail-api/`)
-                .then(response => response.json())
-                .then(data => {
-                    const tab = document.createElement('div');
-                    tab.classList.add('tab');
-                    tab.id = `tab-${data.id}`;
-                    tab.innerHTML = `
+                <!-- 商品価格表示 -->
+                <p>{{ product.price }}円</p>
+
+                <form action="{% url 'add_to_wishlist' product.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit">ほしい物リストに追加</button>
+                </form>
+            </li>
+            {% empty %}
+            <li>No results found</li>
+            {% endfor %}
+        </ul>
+
+
+
+        <h2>おすすめ商品</h2>
+        <ul class="osusume">
+            {% for product in recommended_products %}
+            <li>
+                {% if product.thumbnail %}
+                <img src="{{ product.thumbnail.url }}" alt="{{ product.name }}"
+                    style="width: 170px;max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 8px;">
+                {% else %}
+                <img src="{% static 'search_app/images/notimage_oYwFYVI.png' %}" alt="デフォルト画像"
+                    style="width: 170px;max-width: 100%; height: auto; border-radius: 5px; margin-bottom: 8px;">
+                {% endif %}
+                <a href="#" onclick="openTab('{{ product.id }}'); return false;"
+                    onmouseenter="showPreview(event, '{{ product.id }}')" onmouseleave="hidePreview()">
+                    {{ product.name }}
+                </a>
+                <p>評価: {{ product.average_rating }}</p>
+                <!-- 星の表示をする場合 -->
+                <div>
+                    {% for i in product.full_stars %}
+                    ★
+                    {% endfor %}
+                    {% for i in product.empty_stars %}
+                    ☆
+                    {% endfor %}
+                </div>
+                <form action="{% url 'add_to_wishlist' product.id %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit">ほしい物リストに追加</button>
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+
+
+        <div class="tabs-container" id="tabs-container"></div>
+
+        <div class="preview-box" id="preview-box"></div>
+
+        <script>
+            const tabs = {};
+
+            function openTab(productId) {
+                if (tabs[productId]) {
+                    activateTab(productId);
+                    return;
+                }
+
+                fetch(`/product/${productId}/detail-api/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        const tab = document.createElement('div');
+                        tab.classList.add('tab');
+                        tab.id = `tab-${data.id}`;
+                        tab.innerHTML = `
                 ${data.name} <span class="close-btn" onclick="closeTab(${data.id});">&times;</span>
             `;
-                    tab.onclick = () => activateTab(data.id);
+                        tab.onclick = () => activateTab(data.id);
 
-                    const content = document.createElement('div');
-                    content.classList.add('tab-content');
-                    content.id = `content-${data.id}`;
+                        const content = document.createElement('div');
+                        content.classList.add('tab-content');
+                        content.id = `content-${data.id}`;
 
-                    // メインの商品情報
-                    content.innerHTML = `
-                <h2>${data.name}</h2>
-                <p>${data.description}</p>
-                <p>価格: ¥${data.price}</p>
-                <p>カテゴリ: ${data.category}</p>
-            `;
+                        // メインの商品情報
+                        content.innerHTML = `
+                        <h2>${data.name}</h2>
+                        <p>${data.description}</p>
+                        <p>価格: ¥${data.price}</p>
+                        <p>カテゴリ: ${data.category}</p>
 
-                    // レビュー一覧セクション
-                    const reviewContainer = document.createElement('div');
-                    reviewContainer.id = `reviews-${data.id}`;
-                    reviewContainer.innerHTML = `
+                        <!-- カートに追加ボタン -->
+                        <form action="/cart/add/${data.id}/" method="POST">
+                            <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+                            <button type="submit" style="margin-bottom: 10px;">カートに追加</button>
+                        </form>
+                    `;
+
+
+
+                        // レビュー一覧セクション
+                        const reviewContainer = document.createElement('div');
+                        reviewContainer.id = `reviews-${data.id}`;
+                        reviewContainer.innerHTML = `
                 <h2>レビュー一覧</h2>
                 <ul id="review-list-${data.id}">
                     <p>読み込み中...</p>
@@ -320,83 +210,84 @@
                 `}
             `;
 
-                    content.appendChild(reviewContainer);
-                    document.getElementById('tabs-container').appendChild(tab);
-                    document.body.appendChild(content);
+                        content.appendChild(reviewContainer);
+                        document.getElementById('tabs-container').appendChild(tab);
+                        document.body.appendChild(content);
 
-                    // レビューのデータ取得
-                    fetch(`/product/${productId}/reviews-api/`)
-                        .then(response => response.json())
-                        .then(reviews => {
-                            const reviewList = document.getElementById(`review-list-${data.id}`);
-                            reviewList.innerHTML = ""; // 初期表示の "読み込み中..." を消す
-                            if (reviews.length > 0) {
-                                reviews.forEach(review => {
-                                    reviewList.innerHTML += `
+                        // レビューのデータ取得
+                        fetch(`/product/${productId}/reviews-api/`)
+                            .then(response => response.json())
+                            .then(reviews => {
+                                const reviewList = document.getElementById(`review-list-${data.id}`);
+                                reviewList.innerHTML = ""; // 初期表示の "読み込み中..." を消す
+                                if (reviews.length > 0) {
+                                    reviews.forEach(review => {
+                                        reviewList.innerHTML += `
                                 <li>
                                     <strong>${review.user}</strong>（${review.rating}/5）<br>
                                     <p>${review.comment}</p>
                                     <small>${review.created_at}</small>
                                 </li>
                             `;
-                                });
-                            } else {
-                                reviewList.innerHTML = "<p>まだレビューがありません。</p>";
-                            }
-                        });
+                                    });
+                                } else {
+                                    reviewList.innerHTML = "<p>まだレビューがありません。</p>";
+                                }
+                            });
 
-                    tabs[productId] = { tab, content };
-                    activateTab(productId);
+                        tabs[productId] = { tab, content };
+                        activateTab(productId);
+                    });
+            }
+
+            function activateTab(productId) {
+                Object.values(tabs).forEach(({ tab, content }) => {
+                    tab.classList.remove('active');
+                    content.classList.remove('active');
                 });
-        }
+                tabs[productId].tab.classList.add('active');
+                tabs[productId].content.classList.add('active');
+            }
 
-        function activateTab(productId) {
-            Object.values(tabs).forEach(({ tab, content }) => {
-                tab.classList.remove('active');
-                content.classList.remove('active');
-            });
-            tabs[productId].tab.classList.add('active');
-            tabs[productId].content.classList.add('active');
-        }
+            function closeTab(productId) {
+                const tabData = tabs[productId];
+                if (tabData) {
+                    const allTabs = Array.from(document.querySelectorAll('.tab'));
+                    const currentIndex = allTabs.indexOf(tabData.tab);
+                    const nextIndex = (currentIndex === allTabs.length - 1) ? currentIndex - 1 : currentIndex + 1;
 
-        function closeTab(productId) {
-            const tabData = tabs[productId];
-            if (tabData) {
-                const allTabs = Array.from(document.querySelectorAll('.tab'));
-                const currentIndex = allTabs.indexOf(tabData.tab);
-                const nextIndex = (currentIndex === allTabs.length - 1) ? currentIndex - 1 : currentIndex + 1;
+                    tabData.tab.remove();
+                    tabData.content.remove();
+                    delete tabs[productId];
 
-                tabData.tab.remove();
-                tabData.content.remove();
-                delete tabs[productId];
-
-                if (allTabs.length > 1 && nextIndex >= 0) {
-                    const nextTabId = allTabs[nextIndex].id.replace('tab-', '');
-                    activateTab(nextTabId);
+                    if (allTabs.length > 1 && nextIndex >= 0) {
+                        const nextTabId = allTabs[nextIndex].id.replace('tab-', '');
+                        activateTab(nextTabId);
+                    }
                 }
             }
-        }
 
-        function showPreview(event, productId) {
-            const previewBox = document.getElementById('preview-box');
-            fetch(`/product/${productId}/detail-api/`)
-                .then(response => response.json())
-                .then(data => {
-                    previewBox.innerHTML = `
+            function showPreview(event, productId) {
+                const previewBox = document.getElementById('preview-box');
+                fetch(`/product/${productId}/detail-api/`)
+                    .then(response => response.json())
+                    .then(data => {
+                        previewBox.innerHTML = `
                         <p><strong>${data.name}</strong></p>
                         <p>${data.description}</p>
                         <p>価格: ¥${data.price}</p>
                         <p>カテゴリ: ${data.category}</p>
                     `;
-                    previewBox.style.display = 'block';
-                });
-        }
+                        previewBox.style.display = 'block';
+                    });
+            }
 
-        function hidePreview() {
-            const previewBox = document.getElementById('preview-box');
-            previewBox.style.display = 'none';
-        }
-    </script>
+            function hidePreview() {
+                const previewBox = document.getElementById('preview-box');
+                previewBox.style.display = 'none';
+            }
+        </script>
+    </main>
 </body>
 
 </html>

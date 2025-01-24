@@ -1,0 +1,14 @@
+<h1>決済画面</h1>
+<ul>
+    {% for item in cart_items %}
+    <li>
+        {{ item.product.name }} - {{ item.quantity }} 個 - ¥{{ item.product.price }}
+    </li>
+    {% endfor %}
+</ul>
+<p>合計: ¥{{ total_price }}</p>
+
+<form method="POST">
+    {% csrf_token %}
+    <button type="submit">決済を完了する</button>
+</form>

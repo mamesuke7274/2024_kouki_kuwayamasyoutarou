@@ -1,0 +1,23 @@
+<h1>カート</h1>
+<nav>
+    <ul>
+        <li class="nav"><a href="{% url 'product_create' %}">作成</a></li>
+        <li class="nav"><a href="{% url 'product_list' %}">一覧</a></li>
+    </ul>
+</nav>
+<ul>
+    {% for item in cart_items %}
+    <li>
+        {{ item.product.name }} - {{ item.quantity }} 個 - ¥{{ item.product.price }}
+        <form action="{% url 'remove_from_cart' item.product.id %}" method="POST" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit">削除</button>
+        </form>
+    </li>
+    {% endfor %}
+</ul>
+<p>合計: ¥{{ total_price }}</p>
+
+{% if total_price > 0 %}
+<a href="{% url 'checkout' %}">購入手続きへ進む</a>
+{% endif %}

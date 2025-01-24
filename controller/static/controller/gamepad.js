@@ -1,6 +1,7 @@
 let cursorX = 0; // カーソルのX位置
 let cursorY = 0; // カーソルのY位置
 let cursorSpeed = 10; // カーソル移動速度
+let scrollSpeed = 10; // スクロール速度
 let previousButtonStates = []; // ボタンの前回の状態を記録
 
 // ゲームパッド接続時の処理
@@ -15,7 +16,6 @@ window.addEventListener("gamepaddisconnected", (event) => {
     console.log("Gamepad disconnected:", event.gamepad);
 });
 
-// ゲームパッドの入力チェック
 // ゲームパッドの入力チェック
 function gameLoop() {
     const gamepad = navigator.getGamepads()[0]; // 1台目のゲームパッドを取得
@@ -37,6 +37,16 @@ function gameLoop() {
 
         // カーソルの描画と形状変更
         updateCursor();
+
+        // 右スティックでスクロール操作
+        const scrollXAxis = gamepad.axes[2]; // 右スティックの左右
+        const scrollYAxis = gamepad.axes[3]; // 右スティックの上下
+
+        if (Math.abs(scrollXAxis) > 0.1 || Math.abs(scrollYAxis) > 0.1) {
+            // スティックの入力値がしきい値を超えている場合にスクロール
+            window.scrollBy(scrollXAxis * scrollSpeed, scrollYAxis * scrollSpeed);
+            console.log(`スクロール - X: ${scrollXAxis * scrollSpeed}, Y: ${scrollYAxis * scrollSpeed}`);
+        }
 
         // ボタンの状態をチェック
         gamepad.buttons.forEach((button, index) => {
@@ -64,10 +74,6 @@ function gameLoop() {
         requestAnimationFrame(gameLoop);
     }
 }
-
-
-
-
 
 // カーソルを画面に描画する関数
 function updateCursor() {

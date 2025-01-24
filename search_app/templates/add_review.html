@@ -4,8 +4,9 @@
     {% csrf_token %}
     <div id="star-rating">
         {% for i in range %}
-        <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" />
         <label for="star{{ i }}">&#9733;</label>
+        <input type="radio" id="star{{ i }}" name="rating" value="{{ i }}" />
+
         {% endfor %}
     </div>
     <textarea name="comment" placeholder="コメントを入力"></textarea>
@@ -19,11 +20,11 @@
 
     #star-rating label {
         font-size: 24px;
-        color: gray;
+        color: gold;
         cursor: pointer;
     }
 
     #star-rating input[type="radio"]:checked~label {
-        color: gold;
+        color: gray;
     }
 </style>

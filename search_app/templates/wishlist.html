@@ -19,6 +19,12 @@
             <strong>{{ item.product.name }}</strong><br>
             {{ item.product.description }}<br>
             価格: ¥{{ item.product.price }}<br>
+            <form action="{% url 'add_to_cart' item.product.id %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="product_id" value="{{ item.product.id }}">
+                <button type="submit" style="margin-bottom: 10px;">カートに追加</button>
+            </form>
+
             <a href="{% url 'remove_from_wishlist' item.product.id %}">削除</a>
         </li>
         {% empty %}
