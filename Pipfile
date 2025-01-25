@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+asgiref = "==3.8.1"
+psycopg2 = "==2.9.10"
+sqlparse = "==0.5.1"
+django = "*"
+django-environ = "*"
+dj-database-url = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.12"
